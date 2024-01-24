@@ -3486,7 +3486,7 @@ UINT_32 kalGetTxPendingCmdCount(IN P_GLUE_INFO_T prGlueInfo)
 */
 /*----------------------------------------------------------------------------*/
 
-#if KERNEL_VERSION(4, 15, 0) <= LINUX_VERSION_CODE
+#if KERNEL_VERSION(4, 9, 0) <= LINUX_VERSION_CODE
 void (*prTimerHandlerHack)(unsigned long);
 
 static void prTimerHandlerWrapper(struct timer_list *timer)
