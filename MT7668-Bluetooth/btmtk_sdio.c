@@ -134,7 +134,9 @@ int fw_dump_task_should_stop;
 u8 *fw_dump_ptr;
 u8 *fw_dump_read_ptr;
 u8 *fw_dump_write_ptr;
+#if (LINUX_VERSION_CODE < KERNEL_VERSION(4, 20, 0))
 struct timeval fw_dump_last_write_time;
+#endif
 int fw_dump_end_checking_task_should_stop;
 int fw_is_doing_coredump;
 int fw_is_coredump_end_packet;
@@ -2924,11 +2926,18 @@ static int btmtk_sdio_RegisterBTIrq(struct btmtk_sdio_card *data)
 static int btmtk_stereo_irq_handler(int irq, void *dev)
 {
 	/* Get sys clk */
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 20, 0))
+	ktime_t curr_time = ktime_get();
+	stereo_clk.sys_clk = ktime_to_us(curr_time);
+	clk_flag = 0x01;
+	pr_debug("%s: sys_clk %ld\n", __func__, stereo_clk.sys_clk);
+#else
 	struct timeval tv;
 	do_gettimeofday(&tv);
 	stereo_clk.sys_clk = tv.tv_sec*1000000 + tv.tv_usec;
 	clk_flag = 0x01;
 	pr_debug("%s: tv_sec %d, tv_usec %d sys_clk %ld\n", __func__, tv.tv_sec, tv.tv_usec, stereo_clk.sys_clk);
+#endif
 	return 0;
 }
 
