@@ -5078,7 +5078,7 @@ UINT_64 kalGetBootTime(void)
 {
 	UINT_64 bootTime = 0;
 
-#if KERNEL_VERSION(2, 6, 39) <= LINUX_VERSION_CODE
+#if KERNEL_VERSION(4, 9, 0) > LINUX_VERSION_CODE
 	struct timespec64 ts;
 	ktime_get_boottime_ts64(&ts);
 	bootTime = (ts.tv_sec * 1000000) + ts.tv_nsec / 1000;
